@@ -18,5 +18,6 @@ router.put("/placements/:jobId", auth, updatePlacementOpportunity);
 router.delete("/placements/:jobId", auth, deletePlacementOpportunity);
 router.put("/apply/:jobId", auth, applyJobController);
 router.get("/user-jobs", auth, appliedJobController);
+router.get("/dashboard", auth, dashBoardController);
 
 export default router;

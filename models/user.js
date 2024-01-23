@@ -5,6 +5,9 @@ const userSchema = mongoose.Schema({
   email: { type: String, required: true },
   password: { type: String },
   role: { type: String, default: "student" },
+  departmentId: {
+    type: String,
+  },
   isApproved: { type: Boolean, default: false },
 });
 

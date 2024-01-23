@@ -1,6 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import JobModal from "../models/JobModal.js";
+import UserModal from "../models/user.js";
 
 const router = express.Router();
 export const createJob = async (req, res) => {
@@ -86,6 +87,26 @@ export const appliedJobController = async (req, res) => {
       applicants: { $in: [User._id] },
     });
     res.json({ allJobs: allJobs });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+export const dashBoardController = async (req, res) => {
+  try {
+    const User = req.user;
+    // Find jobs where the applicants array includes the user's _id
+    const totalJobs = await JobModal.count();
+    const totalStudents = await UserModal.count({
+      role: "student",
+    });
+    const totalPlacementOfficer = await JobModal.count({
+      role: "employee",
+    });
+
+    let data = { totalJobs, totalPlacementOfficer, totalStudents };
+    res.json({ data: data });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });

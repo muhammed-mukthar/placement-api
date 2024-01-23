@@ -5,45 +5,40 @@ const jobSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  departmentId: {
+    type: String,
+  },
   companyName: {
     type: String,
     required: true,
   },
   location: {
     type: String,
-    required: true,
   },
   experience: {
     type: String,
-    required: true,
   },
   position: {
     type: Number,
-    required: true,
   },
   type: {
     type: String,
-    required: true,
   },
   typeBadgeColor: {
     type: String,
-    required: true,
   },
   postedDate: {
     type: String,
-    required: true,
   },
   lastDate: {
     type: String,
-    required: true,
   },
   status: {
     type: String,
-    required: true,
+    default: "Open",
   },
   statusBadgeColor: {
     type: String,
-    required: true,
   },
   applicants: {
     type: Array,
