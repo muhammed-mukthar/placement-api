@@ -42,7 +42,9 @@ export const signup = async (req, res) => {
     const oldUser = await UserModal.findOne({ email });
 
     if (oldUser)
-      return res.status(400).json({ message: "User already exists" });
+      return res
+        .status(400)
+        .json({ success: false, message: "User already exists" });
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
@@ -57,9 +59,9 @@ export const signup = async (req, res) => {
       expiresIn: "1h",
     });
 
-    res.status(201).json({ result, token });
+    res.status(201).json({ success: true, result, token });
   } catch (error) {
-    res.status(500).json({ message: "Something went wrong" });
+    res.status(500).json({ success: false, message: "Something went wrong" });
 
     console.log(error);
   }

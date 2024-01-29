@@ -7,6 +7,7 @@ const userSchema = mongoose.Schema({
   role: { type: String, default: "student" },
   departmentId: {
     type: String,
+    default: "BCA",
   },
   isApproved: { type: Boolean, default: false },
 });

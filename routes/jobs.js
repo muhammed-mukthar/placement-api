@@ -7,7 +7,9 @@ import {
   appliedJobController,
   applyJobController,
   createJob,
+  dashBoardController,
   deletePlacementOpportunity,
+  getAllDepartMentsController,
   getJobs,
   updatePlacementOpportunity,
 } from "../controllers/job.js";
@@ -19,5 +21,6 @@ router.delete("/placements/:jobId", auth, deletePlacementOpportunity);
 router.put("/apply/:jobId", auth, applyJobController);
 router.get("/user-jobs", auth, appliedJobController);
 router.get("/dashboard", auth, dashBoardController);
+router.get("/departments", getAllDepartMentsController);
 
 export default router;
