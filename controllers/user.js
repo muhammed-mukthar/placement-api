@@ -98,20 +98,28 @@ export const employeeSignup = async (req, res) => {
   }
 };
 export const AdminCreateUser = async (req, res) => {
-  const { email, password, name } = req.body;
-
+  const { email, password, name, department, role } = req.body;
+  console.log(req.body, password, name, "this ");
   try {
     const oldUser = await UserModal.findOne({ email });
 
     if (oldUser)
       return res.status(400).json({ message: "User already exists" });
 
+    if (!password) {
+      return res.status(400).json({ message: "Password is required" });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 12);
 
+    console.log(hashedPassword, "has");
     const result = await UserModal.create({
       email,
       password: hashedPassword,
       name,
+      department,
+      isApproved: true,
+      role,
     });
 
     const token = jwt.sign({ email: result.email, id: result._id }, secret, {
@@ -154,7 +162,7 @@ export const approveUser = async (req, res) => {
 
 export const getAllUsers = async (req, res) => {
   try {
-    const allUsers = await UserModal.find({ role: "student" });
+    const allUsers = await UserModal.find();
 
     res.status(201).json({ users: allUsers });
   } catch (error) {
