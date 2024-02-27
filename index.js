@@ -17,7 +17,7 @@ app.use("/posts", postRoutes);
 app.use("/user", userRouter);
 app.use("/job", jobRouter);
 
-const CONNECTION_URL = "mongodb://localhost:27017";
+const CONNECTION_URL = "mongodb://localhost:27017/placement";
 const PORT = process.env.PORT || 5000;
 
 mongoose

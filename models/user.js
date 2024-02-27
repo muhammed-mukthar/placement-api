@@ -5,7 +5,7 @@ const userSchema = mongoose.Schema({
   email: { type: String, required: true },
   password: { type: String },
   role: { type: String, default: "student" },
-  departmentId: {
+  department: {
     type: String,
     default: "BCA",
   },

@@ -5,7 +5,7 @@ const jobSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  departmentId: {
+  department: {
     type: String,
   },
   companyName: {

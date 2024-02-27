@@ -6,6 +6,7 @@ import {
   approveUser,
   employeeSignup,
   getAllEmployees,
+  getAllPendingUsers,
   getAllUsers,
   signin,
   signup,
@@ -20,5 +21,6 @@ router.post("/approve/:id", approveUser);
 router.get("/users", getAllUsers);
 router.get("/employees", getAllEmployees);
 router.put("/:id", updateUserInfo);
+router.get("/pending-users", getAllPendingUsers);
 
 export default router;

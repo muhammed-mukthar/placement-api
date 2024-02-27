@@ -36,8 +36,8 @@ export const signin = async (req, res) => {
 };
 
 export const signup = async (req, res) => {
-  const { email, password, name, departmentId } = req.body;
-
+  const { email, password, name, department } = req.body;
+  console.log(req.body);
   try {
     const oldUser = await UserModal.findOne({ email });
 
@@ -52,7 +52,7 @@ export const signup = async (req, res) => {
       email,
       password: hashedPassword,
       name,
-      departmentId,
+      department,
     });
 
     const token = jwt.sign({ email: result.email, id: result._id }, secret, {
@@ -68,7 +68,7 @@ export const signup = async (req, res) => {
 };
 
 export const employeeSignup = async (req, res) => {
-  const { email, password, name, departmentId } = req.body;
+  const { email, password, name, department } = req.body;
 
   try {
     const oldUser = await UserModal.findOne({ email });
@@ -82,7 +82,7 @@ export const employeeSignup = async (req, res) => {
       email,
       password: hashedPassword,
       name,
-      departmentId,
+      department,
       role: "employee",
     });
 
@@ -154,7 +154,19 @@ export const approveUser = async (req, res) => {
 
 export const getAllUsers = async (req, res) => {
   try {
-    const allUsers = await UserModal.findOne({ role: "student" });
+    const allUsers = await UserModal.find({ role: "student" });
+
+    res.status(201).json({ users: allUsers });
+  } catch (error) {
+    res.status(500).json({ message: "Something went wrong" });
+
+    console.log(error);
+  }
+};
+
+export const getAllPendingUsers = async (req, res) => {
+  try {
+    const allUsers = await UserModal.find({ isApproved: false });
 
     res.status(201).json({ users: allUsers });
   } catch (error) {
@@ -165,7 +177,7 @@ export const getAllUsers = async (req, res) => {
 };
 export const getAllEmployees = async (req, res) => {
   try {
-    const allUsers = await UserModal.findOne({ role: "employee" });
+    const allUsers = await UserModal.find({ role: "employee" });
 
     res.status(201).json({ users: allUsers });
   } catch (error) {
