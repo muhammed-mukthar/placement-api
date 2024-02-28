@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import JobModal from "../models/JobModal.js";
 import UserModal from "../models/user.js";
 import DepartmentModal from "../models/DepartmentModal.js";
+import JobApplicationModal from "../models/JobApplicationModal.js";
 
 const router = express.Router();
 export const createJob = async (req, res) => {
@@ -32,6 +33,7 @@ export const updatePlacementOpportunity = async (req, res) => {
         new: true,
       }
     );
+
     res.json(updatedJob);
   } catch (error) {
     console.error(error);
@@ -50,6 +52,7 @@ export const getJobs = async (req, res) => {
       $or: [
         { jobTitle: { $regex: searchTerm, $options: "i" } }, // Case-insensitive search by job title
       ],
+      applicants: { $nin: [User._id] }, // Exclude jobs where user's _id is in applicants array
     };
 
     const allJobs = await JobModal.find(query);
@@ -87,6 +90,13 @@ export const applyJobController = async (req, res) => {
         new: true,
       }
     );
+
+    const newJob = new JobApplicationModal({
+      ...req.body,
+      resume: req.file.path,
+      createdUser: User?._id,
+    });
+    const savedJob = await newJob.save();
     res.json({ updatedJob: updatedJob, applied: true });
   } catch (error) {
     console.error(error);
@@ -135,6 +145,16 @@ export const getAllDepartMentsController = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+export const downloadFileController = async (req, res) => {
+  try {
+    const file = await FileModal.findById(req.params.id);
+    res.download(file.path);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
   }
 };
 export default router;
