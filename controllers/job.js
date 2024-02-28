@@ -42,9 +42,18 @@ export const updatePlacementOpportunity = async (req, res) => {
 export const getJobs = async (req, res) => {
   try {
     const User = req.user;
+    const searchTerm = req.query.search || ""; // Get the search term from query params
 
-    const allJobs = await JobModal.find({ department: User.department });
-    res.status(201).json(allJobs);
+    // Construct the query to filter by department and job title
+    const query = {
+      department: User.department,
+      $or: [
+        { jobTitle: { $regex: searchTerm, $options: "i" } }, // Case-insensitive search by job title
+      ],
+    };
+
+    const allJobs = await JobModal.find(query);
+    res.status(200).json(allJobs);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
