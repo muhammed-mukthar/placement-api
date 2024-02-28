@@ -19,12 +19,6 @@ const jobSchema = new mongoose.Schema({
     type: String,
   },
   position: {
-    type: Number,
-  },
-  type: {
-    type: String,
-  },
-  typeBadgeColor: {
     type: String,
   },
   postedDate: {
@@ -36,9 +30,6 @@ const jobSchema = new mongoose.Schema({
   status: {
     type: String,
     default: "Open",
-  },
-  statusBadgeColor: {
-    type: String,
   },
   applicants: {
     type: Array,

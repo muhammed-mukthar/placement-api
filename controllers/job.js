@@ -7,7 +7,9 @@ import DepartmentModal from "../models/DepartmentModal.js";
 const router = express.Router();
 export const createJob = async (req, res) => {
   try {
-    const newJob = new JobModal(req.body);
+    const User = req.user;
+
+    const newJob = new JobModal({ ...req.body, department: User.department });
     const savedJob = await newJob.save();
     res.status(201).json(savedJob);
   } catch (error) {
@@ -39,7 +41,9 @@ export const updatePlacementOpportunity = async (req, res) => {
 
 export const getJobs = async (req, res) => {
   try {
-    const allJobs = await JobModal.find();
+    const User = req.user;
+
+    const allJobs = await JobModal.find({ department: User.department });
     res.status(201).json(allJobs);
   } catch (error) {
     console.error(error);
@@ -50,6 +54,7 @@ export const getJobs = async (req, res) => {
 export const deletePlacementOpportunity = async (req, res) => {
   try {
     const { jobId } = req.params;
+    console.log(jobId, "sfd");
     const deletedJob = await JobModal.findByIdAndRemove(jobId);
     res.json(deletedJob);
   } catch (error) {
