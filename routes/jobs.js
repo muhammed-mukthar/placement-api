@@ -10,8 +10,11 @@ import {
   dashBoardController,
   deletePlacementOpportunity,
   downloadFileController,
+  getAllAppliedUsersController,
   getAllDepartMentsController,
+  getAllEmployerController,
   getJobs,
+  selectApplicantController,
   updatePlacementOpportunity,
 } from "../controllers/job.js";
 import { upload } from "../utils/multerCofig.js";
@@ -25,5 +28,8 @@ router.get("/user-jobs", auth, appliedJobController);
 router.get("/dashboard", auth, dashBoardController);
 router.get("/departments", getAllDepartMentsController);
 router.get("/download/:id", downloadFileController);
+router.get("/applied-users/:id", getAllAppliedUsersController);
+router.get("/employer-jobs", auth, getAllEmployerController);
+router.post("/select-applicant", auth, selectApplicantController);
 
 export default router;

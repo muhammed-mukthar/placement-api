@@ -10,7 +10,11 @@ export const createJob = async (req, res) => {
   try {
     const User = req.user;
 
-    const newJob = new JobModal({ ...req.body, department: User.department });
+    const newJob = new JobModal({
+      ...req.body,
+      department: User.department,
+      createdUser: User._id,
+    });
     const savedJob = await newJob.save();
     res.status(201).json(savedJob);
   } catch (error) {
@@ -52,6 +56,7 @@ export const getJobs = async (req, res) => {
       $or: [
         { jobTitle: { $regex: searchTerm, $options: "i" } }, // Case-insensitive search by job title
       ],
+      status: "Open",
       applicants: { $nin: [User._id] }, // Exclude jobs where user's _id is in applicants array
     };
 
@@ -63,6 +68,23 @@ export const getJobs = async (req, res) => {
   }
 };
 
+export const getAllEmployerController = async (req, res) => {
+  try {
+    const User = req.user;
+    const searchTerm = req.query.search || ""; // Get the search term from query params
+
+    // Construct the query to filter by department and job title
+    const query = {
+      createdUser: User._id,
+    };
+
+    const allJobs = await JobModal.find(query);
+    res.status(200).json(allJobs);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
 export const deletePlacementOpportunity = async (req, res) => {
   try {
     const { jobId } = req.params;
@@ -150,8 +172,55 @@ export const getAllDepartMentsController = async (req, res) => {
 
 export const downloadFileController = async (req, res) => {
   try {
-    const file = await FileModal.findById(req.params.id);
-    res.download(file.path);
+    const file = await JobApplicationModal.findById(req.params.id).lean();
+    res.download(file.resume);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
+};
+
+export const getAllAppliedUsersController = async (req, res) => {
+  try {
+    let jobId = req.params.id;
+    const data = await JobApplicationModal.find({ jobId: jobId });
+    res.json({ data: data });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
+};
+
+export const selectApplicantController = async (req, res) => {
+  try {
+    let jobId = req.body.jobId;
+    let jobApplicantId = req.body._id;
+    console.log(req.body, "req.body");
+    const User = req.user;
+
+    const data = await JobApplicationModal.findOneAndUpdate(
+      {
+        _id: jobApplicantId,
+      },
+      {
+        $set: {
+          selected: true,
+        },
+      }
+    );
+    const update = await JobModal.findOneAndUpdate(
+      {
+        _id: jobId,
+      },
+      {
+        $set: {
+          selectedUser: User?._id,
+          status: "Closed",
+        },
+      }
+    );
+
+    res.json({ data: data });
   } catch (err) {
     console.error(err);
     res.status(500).send("Server error");

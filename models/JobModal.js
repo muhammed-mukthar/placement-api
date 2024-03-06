@@ -27,6 +27,12 @@ const jobSchema = new mongoose.Schema({
   lastDate: {
     type: String,
   },
+  createdUser: {
+    type: String,
+  },
+  selectedUser: {
+    type: String,
+  },
   status: {
     type: String,
     default: "Open",

@@ -19,6 +19,10 @@ const JobApplicationModalSchema = new mongoose.Schema({
   createdUser: {
     type: String,
   },
+  selected: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 export default mongoose.model("JobApplicationModal", JobApplicationModalSchema);
